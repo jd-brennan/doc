@@ -17,8 +17,8 @@ This is a paragraph.
 flowchart TB
     RR[ReqRepo] -- "RQ created/updated (Kafka msg)" --> ORS
     ORS["Order Routing Service"] --> Start
-    Step1 -- "API to determine <br/>RQ workflow" --> OPS
-    OPS["Order Progression Service"] -- workflow change --> Step1
+    Step1 -- "API to determine <br/>RQ workflow" ---> OPS
+    OPS["Order Progression Service"] -- workflow change ---> Step1
     subgraph "Conductor"
         Start --> Step1["Step1: Evaluate RQ"]
 	Step1 --> Final
