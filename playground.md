@@ -5,8 +5,9 @@ This is a paragraph.
 
 ## What good is sitting alone in your room?
 
-| Document Status | Draft         |
+| Document        |               |
 | --------------- | ------------- |
+| Status          | Draft         |
 | Authors         | JD Brennan    |
 | Reviewers       | Reuben Jacobs |
 |                 | Nathan Louie  |
@@ -31,7 +32,8 @@ end
 2. Second changes are rare
 3. Third time's the charm
 
-Hmmm. Another pargraph.
+<p>Hmmm. <ac:inline-comment-marker ac:ref="21eaddf5-d89b-4450-9eda-7486be4e42a7">Another paragraph</ac:inline-comment-marker>.</p>
+
 
 Bullet list
 
@@ -46,3 +48,8 @@ And some `code`
 [And try this link](https://example.com)
 
 Thanks for playing!
+
+## More stuff
+
+And what do I have to say here?
+
