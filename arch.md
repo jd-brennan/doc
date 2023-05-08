@@ -1,7 +1,9 @@
 
-## Architectures
+## Architecture Tradeoffs
 
-## Direct API Call
+Compare and contrast the following 3 architectures. What are there strengths and weaknesses? When would you use one over another?
+
+## API Call Architecture
 
 ```mermaid
 flowchart LR
@@ -12,7 +14,13 @@ flowchart LR
     WebUI --API call--> WidgetBuilder
 ```
 
-## Message Queuing
+- WebUI accepts widget request from user
+- WebUI calls ProviderService to assign a provider for a widget request
+- WebUI call WidgetBuilder to process a widget request
+- WidgetBuilder calls ProviderService to get provider data
+- ...
+
+## Message Queuing Architecture
 
 ```mermaid
 flowchart LR
@@ -25,7 +33,12 @@ flowchart LR
     MessageService <--send/get msg--> ConsumerService
 ```
 
-## Reconcilation
+- WebUI accepts widget request from user
+- WebUI sends a message to ProviderService to assign a provider for a widget request
+- ProviderService gets message and sends a message to WebUI with assigned provider data
+- ...
+
+## Reconciliation Architecture
 
 ```mermaid
 flowchart LR
@@ -34,3 +47,10 @@ flowchart LR
     id1[(Database)] <--read/write--> ConsumerService
     WidgetBuilder <--read/write--> id1[(Database)]
 ```
+
+- WebUI accepts widget request from user
+- WebUI creates a widget request in the Database
+- ProviderService queries for widget requests that have no Provider assigned
+- ProviderService updates widget requests with Provider data
+- WidgetBuilder queries for widget requests that have a Provider, a Consumer, but no Builder
+- ...
