@@ -16,10 +16,12 @@ This is a paragraph.
 
 ```mermaid
 flowchart TD
-    RR[ReqRepo] -- "RQ review complete (Kafka msg)" --> ORSL
+    Kafka[Kafka Server] -- "RQ created/updated (Kafka msg)" --> ORSL
     ORSL["Kafka Listener"] --> Conductor
-    Conductor <--> OPS["Order Progression Service"]
     Conductor <--> ORS["Order Routing Service"]
+    ORS <--> OPS["Order Progression Service"]
+    ORS <--> RR[ReqRepo]
+    
     subgraph "Conductor"
         Start["RQ Review Complete"] --> Step1["Steps: ..."]
 	    Step1 --> OOP["Create OOP Estimate"]
