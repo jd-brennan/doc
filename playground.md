@@ -29,6 +29,41 @@ flowchart TD
         Step1 --> LMN["Generate LMN"]
 end
 ```
+    participant RR as reqrepo
+    participant ORS as "Order Routing Service"
+    participant CAPI as "Conductor API"
+    participant OPS as "Order Progression Service"
+    RR->>ORS: RQ Modified Kafka Message
+
+Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant CAPI as Conductor API
+    participant ORS as Order Routing Service
+    participant RR as reqrepo
+    participant OPS as Order Progression Service
+    ORS->>CAPI: Register as worker
+    RR->>ORS: RQ Modified (Kafka message)
+    ORS->>CAPI: Start workflow
+    activate CAPI
+    loop
+        CAPI->>ORS: Get RQ Info
+        ORS-->RR: Get RQ Info
+        RR-->>ORS: RQ Info
+        ORS-->>CAPI: RQ Info
+        CAPI->>ORS: Get Payor Info
+        ORS->>OPS: Get Payor/MN Info
+        OPS-->>ORS: Payor/MN Info
+        ORS-->>CAPI: Payor Info
+    end
+    opt Order is OOC
+        CAPI->>ORS: Mark OOC
+        ORS->>RR: Mark OOC
+    end
+    deactivate CAPI
+
+```
 
 > I wonder how Confu handles block quotes This could be ugly.
 
