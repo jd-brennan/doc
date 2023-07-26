@@ -123,7 +123,7 @@ flowchart TD
 
 ```
 
-V2 - planned
+V3 - planned
 
 ```mermaid
 flowchart TD
