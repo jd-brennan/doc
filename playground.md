@@ -65,6 +65,92 @@ sequenceDiagram
 
 ```
 
+Backoffice API Routing
+
+V1 - configuration that caused the incident
+
+```mermaid
+flowchart TD
+    IC["Ingress
+    Controller"]
+    BOC(["BO
+    Container"])
+    BOSC["Side Car"]
+    RRC(["RR
+    Container"])
+    RRSC["Side Car"]
+    Browser -->|/bo| IC
+    Browser -->|/bo/api| IC
+    IC -->|"(1)"| BOC
+    subgraph BO pod
+    BOC -->|"(2)"| BOSC
+    end
+    BOSC -->|"/bo/api (1B)"| RRC
+    subgraph RR pod
+    RRC --> RRSC
+    end
+    BOSC -->|"(3)"| IC
+    IC -->|"(4)"| RRC
+    linkStyle 1,2,3,6,7 stroke:red,stroke-width:3px,color:red;
+
+```
+
+V2 - current
+
+```mermaid
+flowchart TD
+    IC["Ingress
+    Controller"]
+    BOC(["BO
+    Container"])
+    BOSC["Side Car"]
+    RRC(["RR
+    Container"])
+    RRSC["Side Car"]
+    Browser -->|/bo| IC
+    Browser -->|/bo/api| IC
+    IC -->|"(1)"| BOC
+    subgraph BO pod
+    BOC -->|"(2)"| BOSC
+    end
+    BOSC -->|"(3)"| RRC
+    subgraph RR pod
+    RRC --> RRSC
+    end
+    BOSC --> IC
+    IC --> RRC
+    linkStyle 1,2,3,4 stroke:blue,stroke-width:3px,color:blue;
+
+```
+
+V2 - planned
+
+```mermaid
+flowchart TD
+    IC["Ingress
+    Controller"]
+    BOC(["BO
+    Container"])
+    BOSC["Side Car"]
+    RRC(["RR
+    Container"])
+    RRSC["Side Car"]
+    Browser -->|/bo| IC
+    Browser -->|/bo/api| IC
+    IC --> BOC
+    subgraph BO pod
+    BOC --> BOSC
+    end
+    BOSC --> RRC
+    subgraph RR pod
+    RRC --> RRSC
+    end
+    BOSC --> IC
+    IC -->|"(1)"| RRC
+    linkStyle 1,7 stroke:green,stroke-width:3px,color:green;
+
+```
+
 > I wonder how Confu handles block quotes This could be ugly.
 
 1. First things first
