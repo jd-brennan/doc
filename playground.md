@@ -137,17 +137,16 @@ flowchart TD
     RRSC["Side Car"]
     Browser -->|/bo| IC
     Browser -->|/bo/api| IC
-    IC --> BOC
+    IC --> BOSC
+    IC -->|"(1)"| RRSC
     subgraph BO pod
-    BOC --> BOSC
+    BOSC <--> BOC
     end
-    BOSC --> RRC
     subgraph RR pod
-    RRC --> RRSC
+    RRSC <-->|"(2)"| RRC
     end
-    BOSC --> IC
-    IC -->|"(1)"| RRC
-    linkStyle 1,7 stroke:green,stroke-width:3px,color:green;
+    BOSC <--> RRSC
+    linkStyle 1,3,5 stroke:green,stroke-width:3px,color:green;
 
 ```
 
