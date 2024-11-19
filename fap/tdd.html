@@ -1,0 +1,258 @@
+<h1 id="FAP-TDD---Financial-Assistance-Program">FAP TDD - Financial Assistance Program</h1>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Status</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td>Authors</td>
+<td>JD Brennan</td>
+</tr>
+<tr>
+<td>Reviewers</td>
+<td>Reuben Jacobs</td>
+</tr>
+<tr>
+<td></td>
+<td>Nathan Louie</td>
+</tr>
+<tr>
+<td></td>
+<td>Debra Liu</td>
+</tr>
+<tr>
+<td>Version</td>
+<td>2024-11-18.01</td>
+</tr>
+<tr>
+<td>PRD</td>
+<td><a href="https://docs.google.com/document/d/1cFaHknXTRDvAHja3wmrAf4sQuGMPjSwZUTfbtUAhXiQ">CX Product Functional Specification</a></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="TOC">TOC</h2>
+<h2 id="Summary">Summary</h2>
+<p>Provide a mechansim in Backoffice for the Billing Team to calculate financial assistance discounts. This replaces an existing system using Excel and Access.</p>
+<h2 id="Use-Cases">Use Cases</h2>
+<ol>
+<li>Add FAP discount to existing order</li>
+<li>New order created for patient that has already been approved for FAP discount</li>
+<li>New order created for patient that has expired FAP discount
+--- V1</li>
+<li>Attach files to patient user, documenting FAP eligibility</li>
+</ol>
+<h2 id="Component-Changes">Component Changes</h2>
+<h3 id="Patient-Data-Service-PDS">Patient Data Service (PDS)</h3>
+<p>Add new model FinancialAssistance</p>
+<table>
+<thead>
+<tr>
+<th>FinancialAssistance</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>patient_id</td>
+<td>(fk)</td>
+<td></td>
+</tr>
+<tr>
+<td>annual_household_income</td>
+<td>(int)</td>
+<td></td>
+</tr>
+<tr>
+<td>number_of_household_members</td>
+<td>(int)</td>
+<td></td>
+</tr>
+<tr>
+<td>has_loss_of_income</td>
+<td>(bool)</td>
+<td></td>
+</tr>
+<tr>
+<td>lost_income_per_month</td>
+<td>(int)</td>
+<td></td>
+</tr>
+<tr>
+<td>lost_income_time_frame</td>
+<td>(int)</td>
+<td>number of months?</td>
+</tr>
+<tr>
+<td>has_treatment_expenses</td>
+<td>(bool)</td>
+<td></td>
+</tr>
+<tr>
+<td>medical_expenses</td>
+<td>(int)</td>
+<td></td>
+</tr>
+<tr>
+<td>care_expenses</td>
+<td>(int)</td>
+<td></td>
+</tr>
+<tr>
+<td>travel_expenses</td>
+<td>(int)</td>
+<td></td>
+</tr>
+<tr>
+<td>fap_discount</td>
+<td>(int)</td>
+<td></td>
+</tr>
+<tr>
+<td>fap_expiration</td>
+<td>(date)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>And new API associate API calls</p>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Component</th>
+<th>API call</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create Patient FA Record</td>
+<td>PDS</td>
+<td>POST /??</td>
+</tr>
+<tr>
+<td>Get Patient FA Record</td>
+<td>PDS</td>
+<td>GET /??</td>
+</tr>
+<tr>
+<td>Update Patient FA Record</td>
+<td>PDS</td>
+<td>PATCH /??</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="Reqrepo">Reqrepo</h3>
+<p>Add new model FinancialAssitance</p>
+<table>
+<thead>
+<tr>
+<th>FinancialAssistance</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>patient_id</td>
+<td>(fk)</td>
+<td></td>
+</tr>
+<tr>
+<td>fap_discount</td>
+<td>(int)</td>
+<td></td>
+</tr>
+<tr>
+<td>fap_expiration</td>
+<td>(date)</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>And associated API calls</p>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Component</th>
+<th>API Call</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Upsert Patient FA Record</td>
+<td>reqrepo</td>
+<td>PUT /v4/patient/fa ?</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="SFDC-Gateway-NSYNC">SFDC Gateway (NSYNC)</h3>
+<p>Add new business logic</p>
+<ul>
+<li>check for new Patient FA data when polling reqrepo</li>
+<li>send any new Patient FA data to Salesforce</li>
+</ul>
+<h3 id="Backoffice">Backoffice</h3>
+<p>Add new UI components</p>
+<ul>
+<li>On the Patients tab, add a new subtab for Financial Assitance
+<ul>
+<li>See <a href="https://docs.google.com/presentation/d/1dz97MDfi6gQrWMh-g4esb-d04MRQmEQ5znwgEkCNELU/edit#slide=id.g313cabc62a5_0_2">Click Through</a> for mockup)</li>
+<li>Allow Billing Team (and only Billing Team) to view, edit and update</li>
+</ul>
+</li>
+</ul>
+<h2 id="Sequence-Diagrams">Sequence Diagrams</h2>
+<p>Overview of component interactions:</p>
+<ac:structured-macro ac:name="cloudscript-confluence-mermaid"><ac:parameter ac:name="showSource">true</ac:parameter><ac:parameter ac:name="collapse">false</ac:parameter><ac:plain-text-body><![CDATA[sequenceDiagram
+    participant BS as Billing Specialist
+    participant BO as Backoffice
+    participant PD as Patient Data Service
+    participant RR as reqrepo
+    participant NS as NSYNC
+    participant SF as Salesforce
+    participant XI as Xifin
+
+    BS->>BO: FAP Data
+    BO->>BO: FAP Discount
+    BS->>BO: Save
+    BO->>PD: Save FAP Data
+    PD->>RR: Sync FAP Data
+    loop
+        NS->>+RR: Check for new data
+        RR->>-NS: FAP Data
+        NS->>SF: FAP Data
+    end
+    SF->>XI: Apply discount
+]]></ac:plain-text-body></ac:structured-macro><p>Open questions:</p>
+<ol>
+<li></li>
+</ol>
+
