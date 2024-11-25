@@ -7,7 +7,7 @@ MARK=$(shell which mark)
 # Push the current markdown version to Confluence
 publish : playground.md mark
 	export PASS=`grep -A 2 jira ~/.netrc | awk '/password/ {print $$2}'` && \
-	mark -u $(EMAIL) -p $$PASS -b $(URL) -f playground.md
+	mark --mermaid-provider mermaid-go -u $(EMAIL) -p $$PASS -b $(URL) -f playground.md
 
 # Diff the current Confluence version with the current markdown version (check for manual changes)
 diff: playground.md mark

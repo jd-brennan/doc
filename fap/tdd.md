@@ -85,6 +85,16 @@ Add new business logic
 * check for new Patient FA data when polling reqrepo
 * send any new Patient FA data to Salesforce
 
+Data to send SFDC:
+
+Send along with existing patient data object:
+
+1. is_eligible_for_discount (bool)
+2. last_mod_date (date)
+3. discount_percentage (int)
+bucket?
+4. good_until_date (date)
+
 ### Backoffice
 
 Add new UI components
@@ -100,8 +110,9 @@ Overview of component interactions:
 
 ```mermaid
 sequenceDiagram
-    participant BS as Billing Specialist
+    actor BS as Billing Specialist
     participant BO as Backoffice
+    participant SG as Stargate
     participant PD as Patient Data Service
     participant RR as reqrepo
     participant NS as NSYNC
@@ -109,10 +120,14 @@ sequenceDiagram
     participant XI as Xifin
 
     BS->>BO: FAP Data
-    BO->>BO: FAP Discount
     BS->>BO: Save
-    BO->>PD: Save FAP Data
-    PD->>RR: Sync FAP Data
+    BO->>SG: Save FAP Data
+    SG->>PD: Save FAP Data
+    SG->>+RR: Save FAP Discount
+    RR->>RR: Calculate Discount
+    RR->>-SG: Discount
+    SG->>BO: Discount
+
     loop
         NS->>+RR: Check for new data
         RR->>-NS: FAP Data

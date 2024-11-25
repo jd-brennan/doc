@@ -14,6 +14,37 @@ This is a paragraph.
 
 ## Overview
 
+Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    actor BS as Billing Specialist
+    participant BO as Backoffice
+    participant SG as Stargate
+    participant PD as Patient Data Service
+    participant RR as reqrepo
+    participant NS as NSYNC
+    participant SF as Salesforce
+    participant XI as Xifin
+
+    BS->>BO: FAP Data
+    BS->>BO: Save
+    BO->>SG: Save FAP Data
+    SG->>PD: Save FAP Data
+    SG->>+RR: Save FAP Discount
+    RR->>RR: Calculate Discount
+    RR->>-SG: Discount
+    SG->>BO: Discount
+
+    loop
+        NS->>+RR: Check for new data
+        RR->>-NS: FAP Data
+        NS->>SF: FAP Data
+    end
+    SF->>XI: Apply discount
+
+```
+
 ```mermaid
 flowchart TD
     Kafka[Kafka Server] -- "RQ created/updated (Kafka msg)" --> ORSL
@@ -35,35 +66,6 @@ end
     participant OPS as "Order Progression Service"
     RR->>ORS: RQ Modified Kafka Message
 
-Sequence Diagram
-
-```mermaid
-sequenceDiagram
-    participant CAPI as Conductor API
-    participant ORS as Order Routing Service
-    participant RR as reqrepo
-    participant OPS as Order Progression Service
-    ORS->>CAPI: Register as worker
-    RR->>ORS: RQ Modified (Kafka message)
-    ORS->>CAPI: Start workflow
-    activate CAPI
-    loop
-        CAPI->>ORS: Get RQ Info
-        ORS-->RR: Get RQ Info
-        RR-->>ORS: RQ Info
-        ORS-->>CAPI: RQ Info
-        CAPI->>ORS: Get Payor Info
-        ORS->>OPS: Get Payor/MN Info
-        OPS-->>ORS: Payor/MN Info
-        ORS-->>CAPI: Payor Info
-    end
-    opt Order is OOC
-        CAPI->>ORS: Mark OOC
-        ORS->>RR: Mark OOC
-    end
-    deactivate CAPI
-
-```
 
 Backoffice API Routing
 
