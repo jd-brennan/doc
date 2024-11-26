@@ -20,31 +20,31 @@ Sequence Diagram
 sequenceDiagram
     actor BS as Billing Specialist
     participant BO as Backoffice
-    participant SG as Stargate
-    participant PD as Patient Data Service
     participant RR as reqrepo
     participant NS as NSYNC
     participant SF as Salesforce
+    actor B2 as Billing Specialist
     participant XI as Xifin
 
     BS->>BO: FAP Data
     BS->>BO: Save
-    BO->>SG: Save FAP Data
-    SG->>PD: Save FAP Data
-    SG->>+RR: Save FAP Discount
+    BO->>+RR: Save FAP Data
     RR->>RR: Calculate Discount
-    RR->>-SG: Discount
-    SG->>BO: Discount
+    RR->>-BO: Discount
+    BO->>BS: Discount
 
     loop
         NS->>+RR: Check for new data
-        RR->>-NS: FAP Data
-        NS->>SF: FAP Data
+        RR->>-NS: FAP Discount
+        NS->>SF: FAP Discount
     end
-    SF->>XI: Apply discount
+    B2->>SF: Get FAP Discount
+    B2->>XI: Apply discount
 
 ```
 
+
+## s
 ```mermaid
 flowchart TD
     Kafka[Kafka Server] -- "RQ created/updated (Kafka msg)" --> ORSL
