@@ -92,7 +92,7 @@ Send along with existing patient data object:
 1. is_eligible_for_discount (bool)
 2. last_mod_date (date)
 3. discount_percentage (int)
-bucket?
+4. fpl_range (string)
 4. good_until_date (date)
 
 ### Backoffice
